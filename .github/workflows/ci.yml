@@ -1,0 +1,69 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - run: dotnet build --configuration Release
+      # The browser tests need the Chromium revision the pinned Microsoft.Playwright expects, and its OS libraries.
+      - run: pwsh tests/PinkRooster.WebLens.Fetch.BrowserTests/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+      # The SSRF suite and the cache tests run the egress proxy and Valkey in Docker; in CI a missing Docker must fail, not skip.
+      - run: dotnet test --configuration Release --no-build
+        env:
+          WEBLENS_REQUIRE_EGRESS_PROXY: "1"
+          WEBLENS_REQUIRE_VALKEY: "1"
+
+  image:
+    name: build and push ${{ matrix.image }} to ghcr
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        include:
+          - image: weblens
+            context: .
+            file: Dockerfile
+          - image: weblens-egress-proxy
+            context: deploy/egress-proxy
+            file: deploy/egress-proxy/Dockerfile
+          - image: weblens-resolver
+            context: deploy/resolver
+            file: deploy/resolver/Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # The short sha is what a rollback names in .env (IMAGE_TAG); `current` moves with every push to master.
+      - id: version
+        run: echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          push: true
+          tags: |
+            ghcr.io/pinkroosterai/${{ matrix.image }}:${{ steps.version.outputs.sha }}
+            ghcr.io/pinkroosterai/${{ matrix.image }}:current
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+

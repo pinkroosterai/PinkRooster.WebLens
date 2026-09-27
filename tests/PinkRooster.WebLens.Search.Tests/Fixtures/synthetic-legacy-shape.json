@@ -1,0 +1,14 @@
+{
+  "query": "legacy",
+  "number_of_results": 1234,
+  "results": [
+    { "url": "https://example.org/a", "title": "Legacy <b>shape</b>", "content": "Only pubdate is set", "pubdate": "2019-03-04 05:06:07", "engine": "duckduckgo", "score": "not-a-number", "category": "general" },
+    { "url": "javascript:alert(1)", "title": "Bad scheme" },
+    { "url": "https://example.org/b", "title": "Second", "publishedDate": null, "engines": ["brave", "google"], "unknown_future_field": { "nested": [1, 2, 3] } }
+  ],
+  "answers": ["Plain text answer", { "answer": "Object answer", "url": null, "engine": "x" }, { "translations": [] }, 42],
+  "corrections": ["legacy corrected"],
+  "suggestions": ["legacy suggestion"],
+  "infoboxes": [ { "infobox": "Box", "content": "<p>Box content</p>", "id": "https://example.org/box" }, "not-an-object" ],
+  "unresponsive_engines": [ "bare-engine", ["brave", "timeout", true] ]
+}

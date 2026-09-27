@@ -1,0 +1,16 @@
+bin/
+obj/
+.vs/
+.idea/
+*.user
+TestResults/
+*.log
+.env
+
+# Local-only: planning and design notes, agent instructions, the owner's own deployment and benchmark results.
+docs/
+CLAUDE.md
+tasks/
+.claude/
+/compose.yml
+deploy/benchmarks/

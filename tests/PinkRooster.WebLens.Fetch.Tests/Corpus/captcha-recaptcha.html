@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verify to Sign In | Commons Forum</title>
+  <meta name="description" content="Complete the verification check to continue signing in to Commons Forum." />
+  <meta property="og:site_name" content="Commons Forum" />
+  <link rel="stylesheet" href="/static/forum.css" />
+  <script>
+    window.cfAnalytics = window.cfAnalytics || [];
+    window.cfAnalytics.push({ event: 'page_view', page: 'verify' });
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="branding"><a href="/">Commons Forum</a></div>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/categories">Categories</a></li>
+        <li><a href="/help">Help</a></li>
+        <li><a href="/login">Log In</a></li>
+        <li><a href="/register">Register</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="verify-page">
+    <h1>Please verify you are a human</h1>
+    <p>Please complete the check below before continuing to your account.</p>
+
+    <form action="/login/verify" method="POST">
+      <div class="g-recaptcha" data-sitekey="6Lc-example"></div>
+      <button type="submit">Continue</button>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <ul>
+      <li><a href="/about">About</a></li>
+      <li><a href="/help">Help Center</a></li>
+      <li><a href="/privacy">Privacy Policy</a></li>
+      <li><a href="/terms">Terms of Use</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <p>&copy; 2026 Commons Forum.</p>
+  </footer>
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+</html>

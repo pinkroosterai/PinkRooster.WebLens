@@ -1,0 +1,12 @@
+HTTP/1.1 302 Found
+content-type: text/html; charset=utf-8
+content-length: 245
+location: http://duckduckgo.com/?q=cats
+server-timing: total;dur=2.774, render;dur=0
+x-content-type-options: nosniff
+x-download-options: noopen
+x-robots-tag: noindex, nofollow
+referrer-policy: no-referrer
+server: granian
+date: Fri, 25 Sep 2026 10:43:33 GMT
+

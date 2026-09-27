@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verify Your Account | Lumen.Collections</title>
+  <meta name="description" content="Complete the verification check to continue to your Lumen.Collections account." />
+  <meta property="og:site_name" content="Lumen.Collections" />
+  <link rel="stylesheet" href="/assets/account.css" />
+  <script>
+    window.lumenAccountAnalytics = window.lumenAccountAnalytics || [];
+    window.lumenAccountAnalytics.push({ event: 'page_view', page: 'account/verify' });
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="branding"><a href="/">Lumen.Collections</a></div>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="/docs">Docs</a></li>
+        <li><a href="/account">Account</a></li>
+        <li><a href="/support">Support</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="verify-page">
+    <h1>Please verify you are a human</h1>
+    <p>Please complete the check below before continuing to your account.</p>
+
+    <form action="/account/verify" method="POST">
+      <div class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001"></div>
+      <iframe src="https://newassets.hcaptcha.com/captcha/v1/abc/static/hcaptcha.html" title="hCaptcha challenge"></iframe>
+      <button type="submit">Continue</button>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <ul>
+      <li><a href="/about">About</a></li>
+      <li><a href="/support">Support</a></li>
+      <li><a href="/privacy">Privacy Policy</a></li>
+      <li><a href="/terms">Terms of Service</a></li>
+    </ul>
+    <p>&copy; 2026 Lumen.Collections Contributors.</p>
+  </footer>
+
+  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+</body>
+</html>

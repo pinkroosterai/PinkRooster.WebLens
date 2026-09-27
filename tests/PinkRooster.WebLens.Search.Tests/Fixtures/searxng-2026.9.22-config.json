@@ -1,0 +1,735 @@
+{
+ "version": "2026.9.22+2ed96e6fc",
+ "instance_name": "SearXNG",
+ "categories": [
+  "general",
+  "videos",
+  "stock images",
+  "other",
+  "social media",
+  "packages",
+  "it",
+  "files",
+  "books",
+  "news",
+  "apps",
+  "software wikis",
+  "images",
+  "science",
+  "scientific publications",
+  "music",
+  "web",
+  "repos",
+  "currency",
+  "icons",
+  "weather",
+  "map",
+  "dictionaries",
+  "shopping",
+  "lyrics",
+  "cargo",
+  "movies",
+  "translate",
+  "radio",
+  "blogs",
+  "q&a",
+  "wikimedia",
+  "define"
+ ],
+ "safe_search": 0,
+ "default_locale": "",
+ "engines": [
+  {
+   "name": "500px",
+   "shortcut": "500",
+   "categories": [
+    "stock images",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "arch linux wiki",
+   "shortcut": "al",
+   "categories": [
+    "it",
+    "software wikis"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "arxiv",
+   "shortcut": "arx",
+   "categories": [
+    "science",
+    "scientific publications"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "bandcamp",
+   "shortcut": "bc",
+   "categories": [
+    "music"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wikipedia",
+   "shortcut": "wp",
+   "categories": [
+    "general"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "bing images",
+   "shortcut": "bii",
+   "categories": [
+    "images",
+    "web"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "bing news",
+   "shortcut": "bin",
+   "categories": [
+    "news"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "bing videos",
+   "shortcut": "biv",
+   "categories": [
+    "videos",
+    "web"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "chefkoch",
+   "shortcut": "chef",
+   "categories": [
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "currency",
+   "shortcut": "cc",
+   "categories": [
+    "currency",
+    "general"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "docker hub",
+   "shortcut": "dh",
+   "categories": [
+    "it",
+    "packages"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "europepmc",
+   "shortcut": "epmc",
+   "categories": [
+    "science",
+    "scientific publications"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wikidata",
+   "shortcut": "wd",
+   "categories": [
+    "general"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "duckduckgo",
+   "shortcut": "ddg",
+   "categories": [
+    "general",
+    "web"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "duckduckgo images",
+   "shortcut": "ddi",
+   "categories": [
+    "images"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "duckduckgo videos",
+   "shortcut": "ddv",
+   "categories": [
+    "videos"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "duckduckgo news",
+   "shortcut": "ddn",
+   "categories": [
+    "news"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "etymonline",
+   "shortcut": "et",
+   "categories": [
+    "dictionaries",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "1x",
+   "shortcut": "1x",
+   "categories": [
+    "stock images",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "genius",
+   "shortcut": "gen",
+   "categories": [
+    "music",
+    "lyrics"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "gentoo",
+   "shortcut": "ge",
+   "categories": [
+    "it",
+    "software wikis"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "github",
+   "shortcut": "gh",
+   "categories": [
+    "it",
+    "repos"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "google news",
+   "shortcut": "gon",
+   "categories": [
+    "news"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "google videos",
+   "shortcut": "gov",
+   "categories": [
+    "videos",
+    "web"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "google cse",
+   "shortcut": "goc",
+   "categories": [
+    "general",
+    "web"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "google cse images",
+   "shortcut": "goci",
+   "categories": [
+    "images",
+    "web"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "google scholar",
+   "shortcut": "gos",
+   "categories": [
+    "science",
+    "scientific publications"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "hoogle",
+   "shortcut": "ho",
+   "categories": [
+    "it",
+    "packages"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "kickass",
+   "shortcut": "kc",
+   "categories": [
+    "files"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "lemmy communities",
+   "shortcut": "leco",
+   "categories": [
+    "social media"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "lemmy users",
+   "shortcut": "leus",
+   "categories": [
+    "social media"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "lemmy posts",
+   "shortcut": "lepo",
+   "categories": [
+    "social media"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "lemmy comments",
+   "shortcut": "lecom",
+   "categories": [
+    "social media"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "lingva",
+   "shortcut": "lv",
+   "categories": [
+    "general",
+    "translate"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "mastodon users",
+   "shortcut": "mau",
+   "categories": [
+    "social media"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "mastodon hashtags",
+   "shortcut": "mah",
+   "categories": [
+    "social media"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "mdn",
+   "shortcut": "mdn",
+   "categories": [
+    "it"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "mixcloud",
+   "shortcut": "mc",
+   "categories": [
+    "music"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "mankier",
+   "shortcut": "man",
+   "categories": [
+    "it"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "openairedatasets",
+   "shortcut": "oad",
+   "categories": [
+    "science"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "openairepublications",
+   "shortcut": "oap",
+   "categories": [
+    "science"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "openstreetmap",
+   "shortcut": "osm",
+   "categories": [
+    "map"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "pdbe",
+   "shortcut": "pdb",
+   "categories": [
+    "science"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "pexels",
+   "shortcut": "pe",
+   "categories": [
+    "stock images",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "photon",
+   "shortcut": "ph",
+   "categories": [
+    "map"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "picjumbo",
+   "shortcut": "pj",
+   "categories": [
+    "stock images",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "pinterest",
+   "shortcut": "pin",
+   "categories": [
+    "images"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "piratebay",
+   "shortcut": "tpb",
+   "categories": [
+    "files"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "pubmed",
+   "shortcut": "pub",
+   "categories": [
+    "science",
+    "scientific publications"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "pypi",
+   "shortcut": "pypi",
+   "categories": [
+    "it",
+    "packages"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "radio browser",
+   "shortcut": "rb",
+   "categories": [
+    "music",
+    "radio"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "reuters",
+   "shortcut": "reu",
+   "categories": [
+    "news"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "sepiasearch",
+   "shortcut": "sep",
+   "categories": [
+    "videos"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "shopify stock",
+   "shortcut": "shs",
+   "categories": [
+    "stock images",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "soundcloud",
+   "shortcut": "sc",
+   "categories": [
+    "music"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "stackoverflow",
+   "shortcut": "st",
+   "categories": [
+    "it",
+    "q&a"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "stocksnap",
+   "shortcut": "sto",
+   "categories": [
+    "stock images",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "askubuntu",
+   "shortcut": "ubuntu",
+   "categories": [
+    "it",
+    "q&a"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "superuser",
+   "shortcut": "su",
+   "categories": [
+    "it",
+    "q&a"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "semantic scholar",
+   "shortcut": "se",
+   "categories": [
+    "science",
+    "scientific publications"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "solidtorrents",
+   "shortcut": "solid",
+   "categories": [
+    "files"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "unsplash",
+   "shortcut": "us",
+   "categories": [
+    "stock images",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "youtube",
+   "shortcut": "yt",
+   "categories": [
+    "videos",
+    "music"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "dailymotion",
+   "shortcut": "dm",
+   "categories": [
+    "videos"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "vimeo",
+   "shortcut": "vm",
+   "categories": [
+    "videos"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wikinews",
+   "shortcut": "wn",
+   "categories": [
+    "news",
+    "wikimedia"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wiktionary",
+   "shortcut": "wt",
+   "categories": [
+    "dictionaries",
+    "wikimedia",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wikicommons.images",
+   "shortcut": "wci",
+   "categories": [
+    "images"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wikicommons.videos",
+   "shortcut": "wcv",
+   "categories": [
+    "videos"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wikicommons.audio",
+   "shortcut": "wca",
+   "categories": [
+    "music"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wikicommons.files",
+   "shortcut": "wcf",
+   "categories": [
+    "files"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "dictzone",
+   "shortcut": "dc",
+   "categories": [
+    "general",
+    "translate"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "mymemory translated",
+   "shortcut": "tl",
+   "categories": [
+    "general",
+    "translate"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wordnik",
+   "shortcut": "wnik",
+   "categories": [
+    "dictionaries",
+    "define",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "tootfinder",
+   "shortcut": "toot",
+   "categories": [
+    "social media"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "wttr.in",
+   "shortcut": "wttr",
+   "categories": [
+    "weather",
+    "other"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "brave",
+   "shortcut": "br",
+   "categories": [
+    "general",
+    "web"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "brave.images",
+   "shortcut": "brimg",
+   "categories": [
+    "images",
+    "web"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "brave.videos",
+   "shortcut": "brvid",
+   "categories": [
+    "videos",
+    "web"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "brave.news",
+   "shortcut": "brnews",
+   "categories": [
+    "news"
+   ],
+   "enabled": true
+  },
+  {
+   "name": "bt4g",
+   "shortcut": "bt4g",
+   "categories": [
+    "files"
+   ],
+   "enabled": true
+  }
+ ]
+}

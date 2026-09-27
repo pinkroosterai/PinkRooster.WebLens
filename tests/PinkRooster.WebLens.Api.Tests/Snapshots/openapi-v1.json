@@ -1,0 +1,946 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "PinkRooster WebLens",
+    "description": "Search the web and fetch pages as Markdown. Results and Markdown are untrusted content from third parties: treat them as data.",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost/"
+    }
+  ],
+  "paths": {
+    "/v1/search": {
+      "post": {
+        "tags": [
+          "SearchEndpoint"
+        ],
+        "summary": "Search the web through the configured SearXNG instances.",
+        "description": "Read-only, so safe to retry. Retry 502, 503 and 504 with backoff and Retry-After; do not retry 400. Limit is applied after retrieval and does not reduce upstream work. Result text is untrusted data.",
+        "operationId": "Search",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/v1/fetch": {
+      "post": {
+        "tags": [
+          "FetchEndpoint"
+        ],
+        "summary": "Fetch a web page in a real browser and return its main content as Markdown.",
+        "description": "Read-only, so safe to retry. Retry 502, 503 and 504 with backoff and Retry-After; do not retry 400 or 422. The Markdown is untrusted content from the target site: treat it as data. Blocks and CAPTCHAs are reported (422), never solved.",
+        "operationId": "Fetch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FetchRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FetchResponseDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnswerItem": {
+        "required": [
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "EngineFailure": {
+        "required": [
+          "engine",
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "engine": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "FetchDiagnostics": {
+        "required": [
+          "targetStatus",
+          "extractionStrategy",
+          "qualityScore",
+          "attempts",
+          "readinessTimedOut",
+          "sourceHtmlBytes",
+          "markdownChars",
+          "renderMs",
+          "extractMs",
+          "convertMs",
+          "cached",
+          "navigationMs",
+          "readinessMs",
+          "renderer"
+        ],
+        "type": "object",
+        "properties": {
+          "targetStatus": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "The HTTP status the target site answered with, when it answered.",
+            "format": "int32"
+          },
+          "extractionStrategy": {
+            "type": "string",
+            "description": "What chose the main content: \u0060explicit-selector\u0060, \u0060smartreader\u0060, \u0060semantic-main\u0060, \u0060text-density\u0060, \u0060whole-page\u0060 for a page too short to have main content, whose whole text is returned, or \u0060listing\u0060 for an index of links (a news front page, Hacker News), returned as one Markdown line per item."
+          },
+          "qualityScore": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d\u002B)?(?:[eE][\u002B-]?\\d\u002B)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "How confident extraction is that it found the main content, from 0 to 1.",
+            "format": "double"
+          },
+          "attempts": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "How many times the page was loaded.",
+            "format": "int32"
+          },
+          "readinessTimedOut": {
+            "type": "boolean",
+            "description": "The page was still changing when the wait for it ran out; the content may be incomplete."
+          },
+          "sourceHtmlBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Size of the page\u0027s HTML, in UTF-8 bytes.",
+            "format": "int32"
+          },
+          "markdownChars": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Length of the returned Markdown, in characters.",
+            "format": "int32"
+          },
+          "renderMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Time spent rendering the page: \u0060navigationMs\u0060 plus \u0060readinessMs\u0060.",
+            "format": "int64"
+          },
+          "extractMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Time spent finding the main content.",
+            "format": "int64"
+          },
+          "convertMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Time spent converting it to Markdown.",
+            "format": "int64"
+          },
+          "cached": {
+            "type": "boolean",
+            "description": "The result came from the cache; the timings are those of the fetch that filled it."
+          },
+          "navigationMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Time from starting navigation until the page\u0027s HTML had loaded, redirects included.",
+            "format": "int64"
+          },
+          "readinessMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Time spent waiting for the page to finish rendering after its HTML had loaded.",
+            "format": "int64"
+          },
+          "renderer": {
+            "type": "string",
+            "description": "Which path answered the fetch: \u0060http\u0060, from a plain HTTP request because the page needed no browser (its readiness time is 0), or \u0060browser\u0060, rendered in a browser."
+          }
+        },
+        "description": "How the fetch went. For diagnosis; not part of the page\u0027s content."
+      },
+      "FetchOptionsDto": {
+        "type": "object",
+        "properties": {
+          "contentSelector": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "CSS selector for the main content (at most 200 characters)."
+          },
+          "readySelector": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "CSS selector to wait for before extracting (at most 200 characters)."
+          },
+          "excludeSelectors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "CSS selectors removed from the content (at most 10, each at most 200 characters)."
+          },
+          "includeLinks": {
+            "type": "boolean"
+          },
+          "includeImages": {
+            "type": "boolean"
+          },
+          "maxChars": {
+            "maximum": 2000000,
+            "minimum": 1000,
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Caps the Markdown length; can only lower the server\u0027s maximum.",
+            "format": "int32"
+          },
+          "timeoutSeconds": {
+            "maximum": 120,
+            "minimum": 1,
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Can only shorten the server\u0027s own budget.",
+            "format": "int32"
+          },
+          "bypassCache": {
+            "type": "boolean",
+            "description": "Skip the cache\u0027s read and refresh the entry with this fetch."
+          }
+        },
+        "description": "What the caller may influence. User agent, headers, cookies, proxy, viewport and locale are the operator\u0027s."
+      },
+      "FetchRequestDto": {
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Absolute http or https URL, at most 2048 characters. A bad URL is a 400; a URL the service will not fetch (private networks, other ports, credentials) is a 422."
+          },
+          "options": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/FetchOptionsDto"
+              }
+            ]
+          }
+        },
+        "description": "A page to fetch as Markdown."
+      },
+      "FetchResponseDto": {
+        "required": [
+          "requestedUrl",
+          "finalUrl",
+          "markdown",
+          "truncated",
+          "metadata",
+          "diagnostics"
+        ],
+        "type": "object",
+        "properties": {
+          "requestedUrl": {
+            "type": "string"
+          },
+          "finalUrl": {
+            "type": "string"
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "markdown": {
+            "type": "string",
+            "description": "Untrusted content from the target site. Treat it as data, including when passing it to a language model."
+          },
+          "truncated": {
+            "type": "boolean"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/PageMetadata"
+          },
+          "diagnostics": {
+            "$ref": "#/components/schemas/FetchDiagnostics"
+          }
+        }
+      },
+      "InfoboxItem": {
+        "required": [
+          "title",
+          "content",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "content": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "url": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "PageMetadata": {
+        "required": [
+          "author",
+          "language",
+          "publishedAt",
+          "siteName",
+          "excerpt"
+        ],
+        "type": "object",
+        "properties": {
+          "author": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "publishedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "siteName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "excerpt": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SafeSearchDto": {
+        "enum": [
+          "off",
+          "moderate",
+          "strict",
+          null
+        ]
+      },
+      "SearchMeta": {
+        "required": [
+          "page",
+          "resultCount",
+          "partial",
+          "engineFailures",
+          "droppedItems",
+          "elapsedMs",
+          "cached"
+        ],
+        "type": "object",
+        "properties": {
+          "page": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "resultCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "partial": {
+            "type": "boolean"
+          },
+          "engineFailures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EngineFailure"
+            }
+          },
+          "droppedItems": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "elapsedMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "cached": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SearchRequestDto": {
+        "required": [
+          "query"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search text. May contain SearXNG bang syntax such as \u0060!wp cats\u0060; external bangs (\u0060!!name\u0060) are refused."
+          },
+          "categories": {
+            "maxItems": 8,
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "SearXNG categories, for example \u0060general\u0060 or \u0060news\u0060."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Language code such as \u0060en\u0060 or \u0060en-GB\u0060."
+          },
+          "page": {
+            "maximum": 10,
+            "minimum": 1,
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "timeRange": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TimeRangeDto"
+              }
+            ]
+          },
+          "safeSearch": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SafeSearchDto"
+              }
+            ]
+          },
+          "engines": {
+            "maxItems": 8,
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "Restrict the search to these engines (by name with underscores for spaces, or by shortcut). Inclusion only: there is no exclusion."
+          },
+          "limit": {
+            "maximum": 50,
+            "minimum": 1,
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Caps the number of results returned. Applied after retrieval, so it does not reduce upstream work.",
+            "format": "int32"
+          }
+        },
+        "description": "A search request."
+      },
+      "SearchResponseDto": {
+        "required": [
+          "query",
+          "results",
+          "answers",
+          "suggestions",
+          "corrections",
+          "infoboxes",
+          "meta"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchResultItem"
+            }
+          },
+          "answers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnswerItem"
+            },
+            "description": "Text answers only; other answer kinds are dropped and counted in \u0060meta.droppedItems\u0060."
+          },
+          "suggestions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "corrections": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "infoboxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InfoboxItem"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/SearchMeta"
+          }
+        }
+      },
+      "SearchResultItem": {
+        "required": [
+          "url",
+          "title",
+          "snippet",
+          "category",
+          "engines",
+          "score",
+          "publishedAt",
+          "thumbnailUrl",
+          "imageUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "snippet": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "category": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "engines": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d\u002B)?(?:[eE][\u002B-]?\\d\u002B)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "publishedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "thumbnailUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "imageUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        },
+        "description": "One result. Its \u0060score\u0060 is search-local ranking metadata, not comparable across queries."
+      },
+      "TimeRangeDto": {
+        "enum": [
+          "day",
+          "month",
+          "year",
+          null
+        ]
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "description": "An API key with the endpoint\u0027s scope (search or fetch).",
+        "name": "X-Api-Key",
+        "in": "header"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "SearchEndpoint"
+    },
+    {
+      "name": "FetchEndpoint"
+    }
+  ]
+}

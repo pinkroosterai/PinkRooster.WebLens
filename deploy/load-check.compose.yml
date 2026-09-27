@@ -1,0 +1,14 @@
+# Used only by deploy/load-check.sh: a temporary key with limits high enough that the load check measures browser
+# capacity (503 capacity-exceeded), not this key's own rate limit (429). The script removes it again afterwards.
+services:
+  app:
+    environment:
+      WebLens__Api__Keys__1__Id: load-check
+      WebLens__Api__Keys__1__Sha256: ${LOAD_KEY_SHA256:?set by load-check.sh}
+      WebLens__Api__Keys__1__Scopes__0: fetch
+      WebLens__Api__Keys__1__RateLimitProfile: load
+      WebLens__Api__RateLimitProfiles__load__FetchConcurrency: "100"
+      WebLens__Api__RateLimitProfiles__load__FetchBurst: "100"
+      WebLens__Api__RateLimitProfiles__load__FetchPerMinute: "100"
+      # Set RECYCLE_AFTER_CONTEXTS low to recycle the browser mid-run (two browsers at once); defaults to production's.
+      WebLens__Fetch__Browser__RecycleAfterContexts: ${RECYCLE_AFTER_CONTEXTS:-500}

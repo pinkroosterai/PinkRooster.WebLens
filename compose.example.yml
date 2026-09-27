@@ -1,0 +1,148 @@
+# WebLens with its egress proxy, DNS resolver and Valkey cache. Copy to compose.yml (gitignored) and .env.example to
+# .env, fill in .env, then `docker compose pull && docker compose up -d` from the repository root.
+#
+# The network layout is the SSRF boundary, so read this before changing it:
+#   - The app runs Chromium in its own container and is ONLY on internal networks: no route out at all. Never attach it
+#     to a network with a route to the internet (a shared reverse-proxy network usually has one): the browser could then
+#     skip the proxy.
+#   - The egress proxy and the DNS resolver are the only containers with a route out (weblens-outbound).
+#   - Your reverse proxy reaches the app over weblens-ingress, and the app reaches SearXNG over weblens-search. Both are
+#     internal and external to this file, so no stack's `down` removes them. Create them once and attach your reverse
+#     proxy and SearXNG containers to them:
+#       docker network create --internal weblens-ingress
+#       docker network create --internal weblens-search
+name: weblens
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
+x-hardening: &hardening
+  read_only: true
+  cap_drop: [ALL]
+  security_opt:
+    - no-new-privileges:true
+
+services:
+  app:
+    image: ghcr.io/pinkroosterai/weblens:${IMAGE_TAG:-current}
+    container_name: weblens-app
+    logging: *logging
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    # Chromium's sandbox chroots inside the user namespace it creates, and a namespace can only hold capabilities left in
+    # the bounding set. The app runs as pwuser, so this grants the .NET process nothing (probed).
+    cap_add: [SYS_CHROOT]
+    security_opt:
+      - no-new-privileges:true
+      # Chromium's sandbox stays on (SSRF layer L4, process hardening); under Docker's default profile it cannot start.
+      # Playwright's own profile, v1.63.0.
+      - seccomp=./deploy/weblens-seccomp.json
+    tmpfs:
+      - /tmp:size=512m
+      - /home/pwuser:size=64m,uid=1001,gid=1001
+    shm_size: 512m
+    # The browser idles at ~250 MiB and needs ~140 MiB per busy context (deploy/load-check.sh); size this with
+    # MAX_CONCURRENT_CONTEXTS.
+    mem_limit: ${APP_MEMORY_LIMIT:-1536m}
+    cpus: 2
+    expose: ["8080"]
+    dns: [10.201.0.53]
+    environment:
+      WebLens__Api__Keys__0__Id: owner
+      WebLens__Api__Keys__0__Sha256: ${WEBLENS_API_KEY_SHA256:?set in .env}
+      WebLens__Api__Keys__0__Scopes__0: search
+      WebLens__Api__Keys__0__Scopes__1: fetch
+      WebLens__Api__ValkeyConnectionString: weblens-valkey:6379,password=${VALKEY_PASSWORD:?set in .env}
+      WebLens__Search__Instances__0__Name: searxng
+      WebLens__Search__Instances__0__BaseUri: ${SEARXNG_URL:?set in .env}
+      WebLens__Search__Transport__AllowInsecureHttp: "true"
+      WebLens__Fetch__Security__EgressProxy__Server: http://weblens-proxy:4750
+      WebLens__Fetch__Browser__MaxConcurrentContexts: ${MAX_CONCURRENT_CONTEXTS:-3}
+    networks:
+      - internal
+      - ingress
+      - search
+    depends_on:
+      proxy: { condition: service_healthy }
+      resolver: { condition: service_healthy }
+      valkey: { condition: service_healthy }
+    healthcheck:
+      # Ready means search or fetch can work: it names SearXNG, the browser and the egress proxy.
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/health/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    stop_grace_period: 40s
+
+  proxy:
+    image: ghcr.io/pinkroosterai/weblens-egress-proxy:${IMAGE_TAG:-current}
+    container_name: weblens-proxy
+    logging: *logging
+    restart: unless-stopped
+    <<: *hardening
+    # Default deny list: loopback, private (so every network here, SearXNG's included), link-local, CGNAT, IPv4-embedding
+    # IPv6. Never add --allow-range, --allow-address or --unsafe-allow-private-ranges (deploy/egress-proxy/README.md).
+    command: ["--listen-port", "4750"]
+    expose: ["4750"]
+    networks:
+      - internal
+      - outbound
+
+  resolver:
+    image: ghcr.io/pinkroosterai/weblens-resolver:${IMAGE_TAG:-current}
+    container_name: weblens-resolver
+    logging: *logging
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    # Binding port 53 and dropping to its own user are the only privileges dnsmasq needs.
+    cap_add: [NET_BIND_SERVICE, SETUID, SETGID]
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      internal:
+        ipv4_address: 10.201.0.53
+      outbound: {}
+
+  valkey:
+    image: valkey/valkey:9.1.2-alpine
+    container_name: weblens-valkey
+    logging: *logging
+    restart: unless-stopped
+    <<: *hardening
+    # A cache only: no persistence, a memory cap, authentication on. Private to this stack.
+    # Runs as its own user from the start: the image's entrypoint would chown /data as root, and no capability is left.
+    user: "999:1000"
+    command: ["valkey-server", "--save", "", "--appendonly", "no", "--maxmemory", "128mb", "--maxmemory-policy", "allkeys-lru", "--requirepass", "${VALKEY_PASSWORD:?set in .env}"]
+    tmpfs:
+      - /data:size=16m,uid=999,gid=1000
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli -a \"$$VALKEY_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    environment:
+      VALKEY_PASSWORD: ${VALKEY_PASSWORD:?set in .env}
+
+networks:
+  internal:
+    name: weblens-internal
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.201.0.0/24
+  outbound:
+    name: weblens-outbound
+  ingress:
+    external: true
+    name: weblens-ingress
+  search:
+    external: true
+    name: weblens-search

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+    <PackageReference Include="Microsoft.Playwright" />
+    <PackageReference Include="AngleSharp" />
+    <PackageReference Include="SmartReader" />
+    <PackageReference Include="ReverseMarkdown" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="PinkRooster.WebLens.Fetch.Tests" />
+    <InternalsVisibleTo Include="PinkRooster.WebLens.Fetch.BrowserTests" />
+  </ItemGroup>
+
+</Project>

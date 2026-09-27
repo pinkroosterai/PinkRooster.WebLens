@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RingBuffer&lt;T&gt; &mdash; Lumen.Collections Documentation</title>
+  <meta name="description" content="Reference documentation for RingBuffer<T>, the fixed-capacity circular buffer type in Lumen.Collections." />
+  <meta property="og:site_name" content="Lumen.Collections Documentation" />
+  <meta property="og:title" content="RingBuffer<T> reference" />
+  <link rel="stylesheet" href="../assets/docs.css" />
+  <script>
+    window.lumenDocsAnalytics = window.lumenDocsAnalytics || [];
+    window.lumenDocsAnalytics.push({ event: 'page_view', page: 'collections/ring-buffer' });
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="branding"><a href="/">Lumen.Collections</a></div>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="/docs">Docs</a></li>
+        <li><a href="/api">API Reference</a></li>
+        <li><a href="/guides">Guides</a></li>
+        <li><a href="/changelog">Changelog</a></li>
+        <li><a href="/download">Download</a></li>
+        <li><a href="https://github.com/lumen-collections/lumen">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+    <nav class="sidebar" aria-label="Documentation sections">
+      <ul>
+        <li>
+          Getting Started
+          <ul>
+            <li><a href="/docs/getting-started/installation">Installation</a></li>
+            <li><a href="/docs/getting-started/quick-start">Quick Start</a></li>
+            <li><a href="/docs/getting-started/configuration">Configuration</a></li>
+            <li><a href="/docs/getting-started/compatibility">Target Framework Compatibility</a></li>
+          </ul>
+        </li>
+        <li>
+          Core Concepts
+          <ul>
+            <li><a href="/docs/concepts/immutability">Immutability</a></li>
+            <li><a href="/docs/concepts/thread-safety">Thread Safety</a></li>
+            <li><a href="/docs/concepts/capacity-planning">Capacity Planning</a></li>
+            <li><a href="/docs/concepts/comparers">Custom Comparers</a></li>
+          </ul>
+        </li>
+        <li>
+          Collections
+          <ul>
+            <li><a href="/docs/collections/ring-buffer">RingBuffer&lt;T&gt;</a></li>
+            <li><a href="/docs/collections/priority-queue">PriorityQueue&lt;T&gt;</a></li>
+            <li><a href="/docs/collections/skip-list">SkipList&lt;T&gt;</a></li>
+            <li><a href="/docs/collections/bloom-filter">BloomFilter&lt;T&gt;</a></li>
+            <li><a href="/docs/collections/lru-cache">LruCache&lt;TKey, TValue&gt;</a></li>
+            <li><a href="/docs/collections/trie">Trie</a></li>
+            <li><a href="/docs/collections/disjoint-set">DisjointSet</a></li>
+            <li><a href="/docs/collections/interval-tree">IntervalTree&lt;T&gt;</a></li>
+          </ul>
+        </li>
+        <li>
+          Concurrent Collections
+          <ul>
+            <li><a href="/docs/concurrent/overview">Overview</a></li>
+            <li><a href="/docs/concurrent/ring-buffer">ConcurrentRingBuffer&lt;T&gt;</a></li>
+            <li><a href="/docs/concurrent/lru-cache">ConcurrentLruCache&lt;TKey, TValue&gt;</a></li>
+          </ul>
+        </li>
+        <li>
+          Guides
+          <ul>
+            <li><a href="/docs/guides/migrating">Migrating from System.Collections</a></li>
+            <li><a href="/docs/guides/benchmarking">Benchmarking</a></li>
+            <li><a href="/docs/guides/serialization">Serialization</a></li>
+            <li><a href="/docs/guides/custom-comparers">Writing Custom Comparers</a></li>
+            <li><a href="/docs/guides/aot">Native AOT Notes</a></li>
+          </ul>
+        </li>
+        <li>
+          API Reference
+          <ul>
+            <li><a href="/api/namespaces">Namespaces</a></li>
+            <li><a href="/api/interfaces">Interfaces</a></li>
+            <li><a href="/api/extension-methods">Extension Methods</a></li>
+          </ul>
+        </li>
+        <li>
+          Release Notes
+          <ul>
+            <li><a href="/docs/releases/v3-0">v3.0</a></li>
+            <li><a href="/docs/releases/v2-5">v2.5</a></li>
+            <li><a href="/docs/releases/v2-0">v2.0</a></li>
+          </ul>
+        </li>
+        <li><a href="/docs/contributing">Contributing</a></li>
+        <li><a href="/docs/faq">FAQ</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <h1>RingBuffer&lt;T&gt;</h1>
+
+      <p><code>RingBuffer&lt;T&gt;</code> is a fixed-capacity circular buffer built for scenarios where you need bounded, allocation-free storage that overwrites its oldest entries once full. It implements <code>IEnumerable&lt;T&gt;</code> and <code>ICollection&lt;T&gt;</code>, so it slots into existing LINQ pipelines without adapters.</p>
+
+      <p>Unlike <code>List&lt;T&gt;</code>, a <code>RingBuffer&lt;T&gt;</code> never grows past the capacity you give it at construction. Writes past that capacity silently discard the oldest element rather than throwing, which makes the type a good fit for telemetry buffers, recent-event logs, and anything where you only care about the last N items.</p>
+
+      <div class="note">
+        <strong>Note:</strong> <code>RingBuffer&lt;T&gt;</code> is available from Lumen.Collections 2.0 onward. Earlier versions expose the equivalent type as <code>CircularBuffer&lt;T&gt;</code>, which is now marked obsolete.
+      </div>
+
+      <h2 id="overview">Overview</h2>
+      <p>Internally, <code>RingBuffer&lt;T&gt;</code> stores elements in a single contiguous array and tracks a head index and a count. Enqueue is O(1) amortised, and Dequeue never reallocates, because the buffer reuses the same backing array for the lifetime of the instance. The type is not thread-safe by default; wrap it in a <code>Lumen.Collections.Concurrent.SynchronizedRingBuffer&lt;T&gt;</code> if multiple threads will write to it concurrently.</p>
+      <p>Capacity is fixed at construction and expressed in element count, not bytes. Choosing a capacity that is a power of two is not required, but the internal index arithmetic uses modulo division rather than bitmasking regardless of capacity, so there is no performance penalty either way.</p>
+
+      <pre><code class="language-csharp">var events = new RingBuffer&lt;string&gt;(capacity: 50);
+
+events.Add("startup");
+events.Add("connected");
+events.Add("first-request");
+
+foreach (var entry in events)
+{
+    Console.WriteLine(entry);
+}</code></pre>
+
+      <h2 id="usage">Usage</h2>
+      <p>Construct a buffer with an explicit capacity, then call <code>Add</code> or <code>Enqueue</code> to insert items. Reading the buffer through <code>foreach</code> yields elements from oldest to newest. The <code>Capacity</code> property is read-only after construction; if you need to resize, copy the contents into a new instance with a different capacity.</p>
+      <p>The <code>TryPeek</code> and <code>TryDequeue</code> methods follow the same try-pattern used elsewhere in Lumen.Collections: they return a <code>bool</code> and pass the element out by <code>ref</code> parameter, avoiding exceptions on an empty buffer. Prefer these over <code>Peek</code> and <code>Dequeue</code> in hot paths where an empty buffer is an expected, not exceptional, condition.</p>
+
+      <pre><code class="language-csharp">public static RingBuffer&lt;T&gt; CreateWarm&lt;T&gt;(IEnumerable&lt;T&gt; seed, int capacity)
+{
+    var count = 0;
+    var buffer = new RingBuffer&lt;T&gt;(capacity);
+
+    foreach (var item in seed)
+    {
+        if (count &lt; 10)
+        {
+            buffer.Add(item);
+            count++;
+        }
+    }
+
+    return buffer;
+}</code></pre>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>capacity</td>
+            <td>int</td>
+            <td>Maximum number of elements the buffer can hold.</td>
+          </tr>
+          <tr>
+            <td>comparer</td>
+            <td>IEqualityComparer&lt;T&gt;?</td>
+            <td>Optional comparer used by Contains and IndexOf. Defaults to EqualityComparer&lt;T&gt;.Default.</td>
+          </tr>
+          <tr>
+            <td>initialItems</td>
+            <td>IEnumerable&lt;T&gt;?</td>
+            <td>Optional sequence used to pre-populate the buffer at construction.</td>
+          </tr>
+          <tr>
+            <td>allowOverwrite</td>
+            <td>bool</td>
+            <td>When true (the default), inserting past capacity discards the oldest element instead of throwing.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="performance-characteristics">Performance Characteristics</h2>
+      <p>Benchmarks against a naive <code>List&lt;T&gt;</code>-based ring implementation show <code>RingBuffer&lt;T&gt;</code> allocating zero bytes per operation once warmed up, compared to occasional array copies in the naive version. Throughput on a typical workstation exceeds four million enqueue operations per second for reference types and considerably more for value types, since no boxing occurs.</p>
+      <p>Memory overhead beyond the backing array is a single object header plus three int fields (head, count, and version, the last used to detect enumeration-invalidating mutations), so a <code>RingBuffer&lt;T&gt;</code> of capacity 1,000 holding reference-type elements costs roughly the same as a plain <code>T[1000]</code> array.</p>
+
+      <pre><code class="language-csharp">var recentErrors = logBuffer
+    .Where(e => e.Level == LogLevel.Error)
+    .Select(e => e.Message)
+    .ToList();
+
+if (recentErrors.Count &gt; 0)
+{
+    alertService.Raise(recentErrors);
+}</code></pre>
+
+      <p>See also <code>PriorityQueue&lt;T&gt;</code> for a bounded structure that orders rather than overwrites, and <code>LruCache&lt;TKey, TValue&gt;</code> for capacity-bounded key lookups with the same non-throwing eviction behaviour.</p>
+
+      <p class="edit-page"><a href="/edit/docs/collections/ring-buffer">Edit this page</a></p>
+
+      <nav class="prev-next" aria-label="Page navigation">
+        <a href="../priority-queue/" rel="prev">&larr; PriorityQueue&lt;T&gt;</a>
+        <a href="../skip-list/" rel="next">SkipList&lt;T&gt; &rarr;</a>
+      </nav>
+    </main>
+
+    <nav class="toc" aria-label="On this page">
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#performance-characteristics">Performance Characteristics</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <footer class="site-footer">
+    <ul>
+      <li><a href="/docs">Documentation</a></li>
+      <li><a href="/api">API Reference</a></li>
+      <li><a href="/changelog">Changelog</a></li>
+      <li><a href="/docs/contributing">Contributing</a></li>
+      <li><a href="/docs/faq">FAQ</a></li>
+      <li><a href="https://github.com/lumen-collections/lumen/issues">Issue Tracker</a></li>
+      <li><a href="/license">License</a></li>
+      <li><a href="/brand">Brand Assets</a></li>
+      <li><a href="/security">Security Policy</a></li>
+      <li><a href="/sponsors">Sponsors</a></li>
+      <li><a href="/blog">Blog</a></li>
+    </ul>
+    <p>&copy; 2026 Lumen.Collections Contributors.</p>
+  </footer>
+</body>
+</html>
