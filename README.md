@@ -137,6 +137,22 @@ docker compose pull && docker compose up -d
 Set `WEBLENS_API_KEY_SHA256` to the SHA-256 of a key you generate: `printf '%s' "$KEY" | sha256sum`. Only the hash is
 stored. Roll back by setting `IMAGE_TAG` to an earlier short SHA.
 
+### Local builds (private deploy)
+
+To test changes from the working tree in a production-like hardened stack without pushing to GitHub or a registry, use the Compose override file (`compose.dev.yml`) or the convenience script:
+
+```bash
+docker compose -f compose.yml -f compose.dev.yml up -d --build
+# or: ./deploy/dev.sh
+```
+
+This builds the `app`, `proxy` and `resolver` images locally and tags them `:local`. To switch back to the CI-published images from GHCR:
+
+```bash
+docker compose up -d --pull always
+# or: ./deploy/dev.sh reset
+```
+
 `deploy/load-check.sh` checks capacity and graceful shutdown against the running stack. `deploy/benchmark.sh` times
 uncached fetches of a fixed page list.
 

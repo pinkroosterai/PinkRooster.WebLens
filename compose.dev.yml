@@ -1,0 +1,21 @@
+# Local development override: builds images from the working tree instead of pulling from GHCR.
+# Deploy locally:  docker compose -f compose.yml -f compose.dev.yml up -d --build
+# Switch back:     docker compose up -d --pull always
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: weblens:local
+
+  proxy:
+    build:
+      context: deploy/egress-proxy
+      dockerfile: Dockerfile
+    image: weblens-egress-proxy:local
+
+  resolver:
+    build:
+      context: deploy/resolver
+      dockerfile: Dockerfile
+    image: weblens-resolver:local
