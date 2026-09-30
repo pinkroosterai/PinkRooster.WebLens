@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\src\PinkRooster.WebLens.Search\PinkRooster.WebLens.Search.csproj" />
     <ProjectReference Include="..\..\src\PinkRooster.WebLens.Fetch\PinkRooster.WebLens.Fetch.csproj" />
     <ProjectReference Include="..\..\src\PinkRooster.WebLens.Api\PinkRooster.WebLens.Api.csproj" />
+    <ProjectReference Include="..\..\src\PinkRooster.WebLens.Client\PinkRooster.WebLens.Client.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,26 @@
   <PropertyGroup>
     <IsAotCompatible>true</IsAotCompatible>
     <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+
+    <!-- Package Metadata -->
+    <PackageId>PinkRooster.WebLens.Client</PackageId>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <Authors>Pink Rooster</Authors>
+    <Company>Pink Rooster</Company>
+    <Description>A strongly-typed .NET 10 client library for WebLens, giving C# developers typed search and fetch methods, resilience, and problem-details exceptions.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/pinkroosterai/PinkRooster.WebLens</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/pinkroosterai/PinkRooster.WebLens</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>weblens;search;fetch;llm;agent;markdown;searxng;aot</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <!-- Symbols and SourceLink -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +35,11 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="PinkRooster.WebLens.Client.Tests" />
+    <InternalsVisibleTo Include="PinkRooster.WebLens.Architecture.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

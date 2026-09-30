@@ -9,17 +9,20 @@ public class DependencyRulesTests
     private const string SearchNs = "PinkRooster.WebLens.Search";
     private const string FetchNs = "PinkRooster.WebLens.Fetch";
     private const string ApiNs = "PinkRooster.WebLens.Api";
+    private const string ClientNs = "PinkRooster.WebLens.Client";
 
     private static Assembly Load(string name) => Assembly.Load(name);
 
     private static readonly Assembly Search = Load(SearchNs);
     private static readonly Assembly Fetch = Load(FetchNs);
     private static readonly Assembly Api = Load(ApiNs);
+    private static readonly Assembly Client = Load(ClientNs);
 
     public static TheoryData<Assembly, string[]> Forbidden => new()
     {
-        { Search, [FetchNs, ApiNs, "Microsoft.AspNetCore", "ModelContextProtocol"] },
-        { Fetch, [SearchNs, ApiNs, "Microsoft.AspNetCore", "ModelContextProtocol"] },
+        { Search, [FetchNs, ApiNs, ClientNs, "Microsoft.AspNetCore", "ModelContextProtocol"] },
+        { Fetch, [SearchNs, ApiNs, ClientNs, "Microsoft.AspNetCore", "ModelContextProtocol"] },
+        { Client, [SearchNs, FetchNs, ApiNs, "Microsoft.AspNetCore", "ModelContextProtocol"] },
     };
 
     [Theory]
@@ -47,6 +50,7 @@ public class DependencyRulesTests
     {
         Assert.Single(Search.GetExportedTypes(), t => t.IsInterface);
         Assert.Single(Fetch.GetExportedTypes(), t => t.IsInterface);
+        Assert.Single(Client.GetExportedTypes(), t => t.IsInterface);
     }
 
     [Fact]
@@ -56,5 +60,6 @@ public class DependencyRulesTests
 
         Assert.Contains(SearchNs, referenced);
         Assert.Contains(FetchNs, referenced);
+        Assert.DoesNotContain(ClientNs, referenced);
     }
 }
